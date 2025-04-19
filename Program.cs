@@ -2,11 +2,11 @@
 
 class Program
 {
-    private static string javaFilePath;
+    private static string path;
 
     static async Task Main(string[] args)
     {
-        SelectTarget();
+        path = FileExplorer.Browse();
         CheckForChanges();
 
         while (true)
@@ -41,29 +41,73 @@ class Program
         }*/
     }
 
-    private static void SelectTarget()
-    {
-        javaFilePath = FileExplorer.Browse();
-
-        if (!File.Exists(javaFilePath))
-        {
-            Console.WriteLine($"File not found: {javaFilePath}");
-            return;
-        }
-    }
-
     private static void CheckForChanges()
     {
-        var source = File.ReadAllText(javaFilePath);
-        var types = TypeUtils.ExtractJavaTypes(source);
+        var javaFiles = new List<string>();
+
+        if (File.Exists(path))
+        {
+            if (Path.GetExtension(path) == ".java")
+            {
+                javaFiles.Add(path);
+            }
+            else
+            {
+                Console.WriteLine("⚠️ Only .java files are supported.");
+                return;
+            }
+        }
+        else if (Directory.Exists(path))
+        {
+            javaFiles = Directory.GetFiles(path, "*.java", SearchOption.AllDirectories).ToList();
+        }
+        else
+        {
+            Console.WriteLine($"❌ Path not found: {path}");
+            return;
+        }
+
+        Console.WriteLine($"📂 Found {javaFiles.Count} Java file(s).");
+
+        var allTypes = new List<TypeRepresentation>();
+        foreach (var file in javaFiles)
+        {
+            var source = File.ReadAllText(file);
+            var types = TypeUtils.ExtractJavaTypes(source, file);
+
+            foreach (var type in types)
+            {
+                // Prefix with filename to make hashes unique per-file
+                type.SourcePath = Path.GetRelativePath(path, file);
+            }
+
+            allTypes.AddRange(types);
+        }
 
         var previousHashes = TypeUtils.LoadPreviousHashes();
-        Console.WriteLine($"Loading previous hashes: {previousHashes.Count}");
+        
+        TypeUtils.PopulateReferencedTypes(allTypes);
 
-        var currentHashes = types.ToDictionary(t => $"{t.Type}:{t.Name}", t => t.Hash);
+        var currentHashes = allTypes.ToDictionary(
+            t => $"{t.Type}:{t.Name}@{t.SourcePath}",
+            t => new TypeHashEntry
+            {
+                Hash = t.Hash,
+                Type = t.Type,
+                Privacy = t.Privacy,
+                ReturnType = t.ReturnType,
+                Name = t.Name,
+                Parameters = t.Parameters,
+                Content = t.Content,
+                ReferencedTypes = t.ReferencedTypes
+            }
+        );
+
+
         var changes = currentHashes
-            .Where(kvp => !previousHashes.TryGetValue(kvp.Key, out var oldHash) || oldHash != kvp.Value)
+            .Where(kvp => !previousHashes.TryGetValue(kvp.Key, out var oldEntry) || oldEntry.Hash != kvp.Value.Hash)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
 
         if (changes.Count == 0)
         {
@@ -74,7 +118,7 @@ class Program
             Console.WriteLine("🔄 Changes detected in:");
             foreach (var change in changes)
             {
-                Console.WriteLine($"- {change.Key} (new or modified)");
+                Console.WriteLine($"- {change.Key}");
             }
 
             TypeUtils.SaveHashes(currentHashes);

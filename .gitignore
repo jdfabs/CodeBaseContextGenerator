@@ -94,4 +94,8 @@ fabric.properties
 **/obj/
 **/.idea/
 **/bin/
-**/obj/
+obj/
+bin/
+.idea/
+obj
+bin
