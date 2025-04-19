@@ -6,9 +6,6 @@ namespace CodeBaseContextGenerator;
 
 class Program
 {
-    
-    
-    
     // 📄 Output lives one level above solution root so it’s easy to inspect
     private static readonly string JsonPath = Path.Combine(
         Directory.GetParent(Directory.GetCurrentDirectory())!.Parent!.Parent!.FullName,
@@ -16,7 +13,7 @@ class Program
 
     private static string _chosenPath = string.Empty;
 
-    static async Task Main(string[] args)
+    static async System.Threading.Tasks.Task Main(string[] args)
     {
         // 1️⃣ Let the user pick a .java file or a folder (WASD file‑explorer)
         _chosenPath = FileExplorer.Browse();
@@ -59,10 +56,22 @@ class Program
 
         ResolveTypeReferences(allItems);
         var grouped = GroupByFile(allItems, rootPath);
-        WriteGroupedJson(JsonPath, grouped);
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"✓  Bundled {allItems.Count} items → {JsonPath}\"");
+        
+        int changeCount;
+        if ((changeCount = UpdateJsonIfChanged(JsonPath, grouped)) == 0)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("✖  No changes detected. Nothing to update.");
+            
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"✓  JSON file updated {changeCount} out of {allItems.Count} modified elements.");
+            
+        }
         Console.ResetColor();
+       
     }
 
     /*─────────────────────────  Helper Utils  ─────────────────────────*/
@@ -108,38 +117,148 @@ class Program
     private static Dictionary<string, List<TypeRepresentation>> GroupByFile(
         IEnumerable<TypeRepresentation> items, string rootPath)
     {
-        return items.GroupBy(item =>
+        // Use the existing relative SourcePath on each item (already computed by the builder)
+        var groups = new Dictionary<string, List<TypeRepresentation>>();
+
+        foreach (var item in items)
+        {
+            // SourcePath is relative to the selected root, with forward slashes
+            var relPath = item.SourcePath.Replace('\'', '/');
+            var fileName = Path.GetFileName(relPath);
+            var dir = Path.GetDirectoryName(relPath)?.Replace('\'', '/') ?? string.Empty;
+            if (string.IsNullOrEmpty(dir)) dir = ".";
+
+            var key = $"{fileName}@{dir}";
+            if (!groups.TryGetValue(key, out var list))
             {
-                var rel = Path.GetRelativePath(rootPath, item.SourcePath).Replace('\\', '/');
-                var file = Path.GetFileName(item.SourcePath);
-                var dir = Path.GetDirectoryName(rel);
-                return $"{file}@{(string.IsNullOrEmpty(dir) ? "." : dir)}";
-            })
-            .ToDictionary(g => g.Key, g => g.ToList());
+                list = new List<TypeRepresentation>();
+                groups[key] = list;
+            }
+
+            list.Add(item);
+        }
+
+        return groups;
     }
 
-    private static void WriteGroupedJson(string outputPath, Dictionary<string, List<TypeRepresentation>> grouped)
+    private static int UpdateJsonIfChanged(string outputPath, Dictionary<string, List<TypeRepresentation>> grouped)
     {
+        int changeCount = 0;
         var options = new JsonSerializerOptions
         {
             WriteIndented = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        using var writer = new Utf8JsonWriter(File.Create(outputPath), new JsonWriterOptions { Indented = true });
-        writer.WriteStartArray();
-        foreach (var kvp in grouped)
+        // Load existing file
+        Dictionary<string, List<TypeRepresentation>>? existing = null;
+        if (File.Exists(outputPath))
         {
-            writer.WriteStartObject();
-            writer.WritePropertyName(kvp.Key);
-            JsonSerializer.Serialize(writer, kvp.Value, options);
-            writer.WriteEndObject();
+            try
+            {
+                var raw = File.ReadAllText(outputPath);
+                existing = JsonSerializer.Deserialize<List<Dictionary<string, List<TypeRepresentation>>>>(raw)?
+                    .SelectMany(dict => dict)
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            catch
+            {
+                Console.WriteLine("⚠ Could not parse existing JSON. Overwriting everything.");
+            }
         }
 
-        writer.WriteEndArray();
-        writer.Flush();
+        var finalOutput = new List<Dictionary<string, List<TypeRepresentation>>>();
+        bool anyChanges = false;
+
+        foreach (var kvp in grouped)
+        {
+            string key = kvp.Key;
+            var newItems = kvp.Value;
+
+            var updatedItems = new List<TypeRepresentation>();
+
+            var oldItems = existing != null && existing.TryGetValue(key, out var found)
+                ? found
+                : new List<TypeRepresentation>();
+
+            foreach (var newItem in newItems)
+            {
+                var matchingOld = oldItems.FirstOrDefault(o => o.Name == newItem.Name && o.Type == newItem.Type);
+
+                // Check top-level class/interface hash
+                bool typeChanged = matchingOld == null || matchingOld.Hash != newItem.Hash;
+
+                // Default to using the new version
+                var result = newItem;
+
+                if (!typeChanged && matchingOld?.Methods != null && newItem.Methods != null)
+                {
+                    var updatedMethods = new List<TypeRepresentation>();
+                    bool methodChanged = false;
+
+                    foreach (var newMethod in newItem.Methods)
+                    {
+                        var matchingOldMethod = matchingOld.Methods
+                            .FirstOrDefault(m => m.Name == newMethod.Name && m.Type == "method");
+
+                        if (matchingOldMethod != null && matchingOldMethod.Hash == newMethod.Hash)
+                        {
+                            updatedMethods.Add(matchingOldMethod);
+                            Console.WriteLine($"  ✓ No changes in method {newMethod.Name}");
+                        }
+                        else
+                        {
+                            updatedMethods.Add(newMethod);
+                            Console.WriteLine($"  ✖ Method changed: {newMethod.Name}");
+                            methodChanged = true;
+                            changeCount++;
+                        }
+                    }
+
+                    if (!methodChanged)
+                    {
+                        Console.WriteLine($"✓ No changes in {newItem.Name} ({newItem.Type})");
+                        result = matchingOld;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"✖ Changes detected in methods of {newItem.Name} ({newItem.Type})");
+                        result.Methods = updatedMethods;
+                        anyChanges = true;
+                        changeCount++;
+                    }
+                }
+                else if (typeChanged)
+                {
+                    Console.WriteLine($"✖ Structural change: {newItem.Name} ({newItem.Type})");
+                    anyChanges = true;
+                    changeCount++;
+                }
+                else
+                {
+                    // Perfect match — reuse everything
+                    Console.WriteLine($"✓ No changes in {newItem.Name} ({newItem.Type})");
+                    result = matchingOld!;
+                }
+
+                updatedItems.Add(result);
+            }
+
+            finalOutput.Add(new Dictionary<string, List<TypeRepresentation>> { [key] = updatedItems });
+        }
+
+        if (!anyChanges)
+        {
+            return changeCount;
+        }
+
+        var finalJson = JsonSerializer.Serialize(finalOutput, options);
+        File.WriteAllText(outputPath, finalJson);
+        Console.WriteLine("✓ JSON file updated with modified elements.");
+        return changeCount;
     }
 }
+
 
 /*                                        aass
 var ollama = new OllamaClient();
