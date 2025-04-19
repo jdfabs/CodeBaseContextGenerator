@@ -18,9 +18,10 @@ private interface Welcomer {
     void welcome();
 }
 
-class FriendlyGreeter implements Greeter, Welcomer {
-    public void greet() {
+class FriendlyGreeter implements Greeter, Welcomer  {
+    public void greet()  throws ArithmeticException{
         System.out.println("Greetings");
+        new Speaker();
     }
 
     public void welcome() {
