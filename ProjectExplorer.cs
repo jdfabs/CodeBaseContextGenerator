@@ -108,27 +108,31 @@ public static class ProjectExplorer
                         break;
                     }
 
-                    var projectRoot = Path.GetFullPath(
-                        Path.Combine(Environment.CurrentDirectory, "..", "..", ".."));
-
                     var fileName = $"{selected.Label.Replace('.', '_')}_context.json";
+                    var projectRoot = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", ".."));
                     var outPath = Path.Combine(projectRoot, fileName);
-
 
                     try
                     {
-                        WriteMethodContext("../../../project_context.json", selected, outPath);
+                        Console.WriteLine($"🔍 Trying to write method context for: {selected.Label}");
+                        Console.WriteLine($"  ➜ Output path: {outPath}");
+
+                        var contextPath = Path.Combine(projectRoot, "project_context.json");
+
+                        WriteMethodContext(contextPath, selected, outPath);
                         Console.WriteLine($"✓ Context written to {outPath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"❌ Failed to write context: {ex.Message}");
+                        Console.WriteLine("❌ Failed to write context:");
+                        Console.WriteLine(ex);
                     }
 
                     Console.WriteLine("Press any key to continue...");
                     Console.ReadKey(true);
                     break;
                 }
+
 
             }
         }
@@ -150,11 +154,17 @@ public static class ProjectExplorer
         return result;
     }
     
-    private static void WriteMethodContext(
-        string jsonIn,
-        ExplorerNode method,
-        string jsonOut)
+    private static void WriteMethodContext(string jsonIn, ExplorerNode method, string jsonOut)
     {
+        Console.WriteLine($"📄 Loading context for: {method.Label}");
+
+        if (method.Data == null)
+        {
+            throw new Exception("❌ method.Data is null — the selected ExplorerNode has no attached metadata.");
+        }
+
+        Console.WriteLine($"✔ method.Data.Name: {method.Data.Name}");
+        Console.WriteLine($"✔ method.Data.SourcePath: {method.Data.SourcePath}");
         // 1) Load full structure
         var allGroups = JsonSerializer.Deserialize<
                 List<Dictionary<string, List<TypeRepresentation>>>>(
@@ -202,14 +212,22 @@ public static class ProjectExplorer
         // 5) base types
         var baseTypes = (declaringRep?.ReferencedTypes ?? Enumerable.Empty<TypeReference>())
             .Where(r => r.Kind is "extends" or "implements")
-            .Select(r => lookup.TryGetValue(r.Source, out var rep) ? rep : null)
+            .Select(r => 
+                !string.IsNullOrWhiteSpace(r.Source) && lookup.TryGetValue(r.Source, out var rep)
+                    ? rep
+                    : null
+            )
             .Where(r => r != null)
             .ToList();
 
         // 6) used types
         var usedTypes = methodRep.ReferencedTypes
             .Where(r => r.Kind is "uses" or "throws")
-            .Select(r => lookup.TryGetValue(r.Source, out var rep) ? rep : null)
+            .Select(r => 
+                !string.IsNullOrWhiteSpace(r.Source) && lookup.TryGetValue(r.Source, out var rep)
+                    ? rep
+                    : null
+            )
             .Where(r => r != null)
             .ToList();
 
