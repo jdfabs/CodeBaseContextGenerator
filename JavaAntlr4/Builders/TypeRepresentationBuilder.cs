@@ -42,7 +42,7 @@ public sealed class TypeRepresentationBuilder
             Type = node.Kind,
             Privacy = node.Privacy,
             SourcePath = Path.GetRelativePath(_rootPath, _sourcePath),
-            Content = node.Content,
+            Code = node.Content,
             ReferencedTypes = node.InheritanceRefs.ToList(),
             Methods = new List<TypeRepresentation>()
         };
@@ -63,7 +63,7 @@ public sealed class TypeRepresentationBuilder
             Privacy = m.Privacy,
             ReturnType = m.ReturnType,
             Parameters = m.Parameters,
-            Content = m.Content,
+            Code = m.Content,
             SourcePath = Path.GetRelativePath(_rootPath, _sourcePath),
             ReferencedTypes = m.ReferencedTypes.ToList()
         };

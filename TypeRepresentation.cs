@@ -1,28 +1,39 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace CodeBaseContextGenerator;
 
 public class TypeRepresentation
 {
-    public string Name { get; set; }
-    public string Type { get; set; }
-    public string Privacy { get; set; } // public, private, protected
-    public string ReturnType { get; set; } // void, int, String, etc.
-    public string Parameters { get; set; } // (int a, String b)
-    public string Content { get; set; } 
-    public string SourcePath { get; set; }
-    public List<TypeReference> ReferencedTypes { get; set; } // List of types referenced in the method, e.g. another class or interface
-    public List<TypeRepresentation> Methods { get; set; }
+    public string Name           { get; set; }
+    public string Type           { get; set; }
+    public string Privacy        { get; set; }
+    public string ReturnType     { get; set; }
+    public string Parameters     { get; set; }
+
+    // Rename the old Content to Code
+    [JsonPropertyName("Content")]
+    public string Code           { get; set; }
+
+    // New field for your LLM docstring
+    public string Summary        { get; set; }
+
+    public string SourcePath     { get; set; }
+    public List<TypeReference> ReferencedTypes { get; set; }
+    public List<TypeRepresentation> Methods     { get; set; }
+
+    // Hash is computed only over the raw code
     public string Hash => ComputeHash();
 
     private string ComputeHash()
     {
         using var sha = SHA256.Create();
-        var bytes = Encoding.UTF8.GetBytes(Content);
+        var bytes = Encoding.UTF8.GetBytes(Code);
         return Convert.ToHexString(sha.ComputeHash(bytes));
     }
 }
+
 
 public class TypeReference
 {

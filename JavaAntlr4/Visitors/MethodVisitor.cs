@@ -12,13 +12,33 @@ internal static class MethodVisitor
 
         var referenced = new TypeUsageCollector(root, src).Visit(ctx.methodBody());
 
+        string parameters = FormatParameters(ctx);
+
         return new AstMethodNode(
-            Name:       ctx.identifier().GetText(),
-            Privacy:    privacy,
+            Name: ctx.identifier()?.GetText() ?? "<unknown>",
+            Privacy: privacy,
             ReturnType: ctx.typeTypeOrVoid()?.GetText() ?? "void",
-            Parameters: ctx.formalParameters()?.GetText() ?? "()",
-            Content:    ctx.GetText(),
+            Parameters: parameters,
+            Content: ctx.GetText(),
             ReferencedTypes: referenced
         );
+    }
+    
+    private static string FormatParameters(JavaParser.MethodDeclarationContext ctx)
+    {
+        var paramList = ctx.formalParameters()?.formalParameterList();
+        if (paramList == null || paramList.formalParameter().Length == 0)
+            return "()";
+
+        var formatted = paramList
+            .formalParameter()
+            .Select(param =>
+            {
+                var type = param.typeType()?.GetText() ?? "unknown";
+                var name = param.variableDeclaratorId()?.GetText() ?? "arg";
+                return $"{type} {name}";
+            });
+
+        return $"({string.Join(", ", formatted)})";
     }
 }
