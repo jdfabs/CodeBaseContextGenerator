@@ -40,9 +40,11 @@ public static class ChangeDetector
             finalOutput.Add(new Dictionary<string, List<TypeRepresentation>> { [fileKey] = updated });
         }
 
+        if (changeCount == 0) return ChangeResult.NoChanges;
+
         return new ChangeResult
         {
-            HasChanges = changeCount > 0,
+            HasChanges = true,
             ChangeCount = changeCount,
             MergedJson = finalOutput
         };
@@ -91,11 +93,15 @@ public static class ChangeDetector
 
     private static bool MethodsUnchanged(TypeRepresentation? old, TypeRepresentation current)
     {
-        return old?.Methods != null && current.Methods != null &&
-               old.Methods.All(om =>
-                   current.Methods.Any(cm => cm.Name == om.Name && cm.Hash == om.Hash));
-    }
+        if (old?.Methods == null || current.Methods == null) return false;
 
+        var currentMap = current.Methods.ToDictionary(m => m.Name);
+        return old.Methods.All(oldM =>
+            currentMap.TryGetValue(oldM.Name, out var currM) &&
+            oldM.Hash == currM.Hash
+        );
+    }
+    
     private static async Task<List<TypeRepresentation>> SummarizeChangedMethodsAsync(
         List<TypeRepresentation>? oldMethods,
         List<TypeRepresentation>? currentMethods,
