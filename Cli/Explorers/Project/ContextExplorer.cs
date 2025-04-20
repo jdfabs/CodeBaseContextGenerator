@@ -7,8 +7,12 @@ public static class ContextExporter
 {
     public static void Export(string jsonIn, ExplorerNode method, string outputPath)
     {
-        var allGroups = JsonSerializer.Deserialize<List<Dictionary<string, List<TypeRepresentation>>>>(
-                File.ReadAllText(jsonIn)).SelectMany(d => d)
+        var parsed = JsonLoader.Load<List<Dictionary<string, List<TypeRepresentation>>>>(jsonIn);
+        if (parsed == null)
+            throw new InvalidOperationException("❌ Failed to load or parse context JSON.");
+
+        var allGroups = parsed
+            .SelectMany(d => d)
             .ToDictionary(k => k.Key, v => v.Value);
 
         var lookup = allGroups

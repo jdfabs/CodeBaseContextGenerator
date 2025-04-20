@@ -1,5 +1,5 @@
-using System.Text.Json;
 using CodeBaseContextGenerator.Cli.Models;
+using CodeBaseContextGenerator.Json;
 
 namespace CodeBaseContextGenerator.Cli.Project;
 
@@ -7,30 +7,10 @@ public class ProjectModelLoader
 {
     public static List<ExplorerNode> Load(string path)
     {
-        if (!File.Exists(path))
-        {
-            Console.WriteLine($"❌ JSON file not found: {Path.GetFullPath(path)}");
-            return new();
-        }
+        var parsed = JsonLoader.Load<List<Dictionary<string, List<TypeRepresentation>>>>(path);
+        if (parsed == null) return new();
 
-        var raw = File.ReadAllText(path);
-        if (string.IsNullOrWhiteSpace(raw))
-        {
-            Console.WriteLine($"⚠ JSON file is empty: {Path.GetFullPath(path)}");
-            return new();
-        }
-
-        try
-        {
-            var parsed = JsonSerializer.Deserialize<List<Dictionary<string, List<TypeRepresentation>>>>(raw);
-            return BuildTree(parsed ?? []);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Failed to parse JSON: {path}");
-            Console.WriteLine(ex.Message);
-            return new();
-        }
+        return BuildTree(parsed);
     }
 
     private static List<ExplorerNode> BuildTree(List<Dictionary<string, List<TypeRepresentation>>> parsed)
