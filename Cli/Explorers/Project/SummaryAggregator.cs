@@ -1,6 +1,6 @@
 using CodeBaseContextGenerator.Cli.Models;
 
-namespace CodeBaseContextGenerator.Cli.ProjectExplorer;
+namespace CodeBaseContextGenerator.Cli.Project;
 
 public class SummaryAggregator
 {

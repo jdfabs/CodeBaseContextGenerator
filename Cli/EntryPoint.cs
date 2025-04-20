@@ -23,7 +23,7 @@ public class EntryPoint
         var backgroundTask = Task.Run(BackgroundAnalyzerLoop);
 
         // 3️⃣ Launch interactive project explorer (in main thread)
-        var explorer = new ProjectExplorer.ProjectExplorer(_jsonPath);
+        var explorer = new Project.ProjectExplorer(_jsonPath);
         Console.ReadKey();
         explorer.Browse();
     }

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using CodeBaseContextGenerator.Cli.Models;
 
-namespace CodeBaseContextGenerator.Cli.ProjectExplorer;
+namespace CodeBaseContextGenerator.Cli.Project;
 
 public static class ContextExporter
 {
