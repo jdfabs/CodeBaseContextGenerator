@@ -14,7 +14,7 @@ public static class ChangeDetector
         var existing = LoadExisting(existingJsonPath);
 
         var changeCount = 0;
-        var finalOutput = new List<Dictionary<string, List<TypeRepresentation>>>();
+        var merged = new Dictionary<string, List<TypeRepresentation>>(); // 💡 instead of finalOutput
 
         foreach (var kvp in groupedNew)
         {
@@ -37,10 +37,14 @@ public static class ChangeDetector
             }
 
 
-            finalOutput.Add(new Dictionary<string, List<TypeRepresentation>> { [fileKey] = updated });
+            merged[fileKey] = updated;
         }
 
         if (changeCount == 0) return ChangeResult.NoChanges;
+
+        var finalOutput = merged
+            .Select(kvp => new Dictionary<string, List<TypeRepresentation>> { [kvp.Key] = kvp.Value })
+            .ToList();
 
         return new ChangeResult
         {
