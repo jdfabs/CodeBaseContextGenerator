@@ -5,17 +5,8 @@ namespace CodeBaseContextGenerator.JavaAntlr4.Builders;
 /// rich, JSON‑serialisable <see cref="TypeRepresentation"/> objects that
 /// the rest of the pipeline expects.
 /// </summary>
-public sealed class TypeRepresentationBuilder
+public sealed class TypeRepresentationBuilder(string rootPath, string sourcePath)
 {
-    private readonly string _rootPath;
-    private readonly string _sourcePath;
-
-    public TypeRepresentationBuilder(string rootPath, string sourcePath)
-    {
-        _rootPath = rootPath;
-        _sourcePath = sourcePath;
-    }
-
     /// <summary>
     /// Entry‑point: turn a flat collection of <see cref="IAstTypeNode"/>
     /// trees into a flat list of <see cref="TypeRepresentation"/> records.
@@ -41,7 +32,7 @@ public sealed class TypeRepresentationBuilder
             Name = node.Name,
             Type = node.Kind,
             Privacy = node.Privacy,
-            SourcePath = Path.GetRelativePath(_rootPath, _sourcePath),
+            SourcePath = Path.GetRelativePath(rootPath, sourcePath),
             Code = node.Content,
             ReferencedTypes = node.InheritanceRefs.ToList(),
             Methods = new List<TypeRepresentation>()
@@ -64,7 +55,7 @@ public sealed class TypeRepresentationBuilder
             ReturnType = m.ReturnType,
             Parameters = m.Parameters,
             Code = m.Content,
-            SourcePath = Path.GetRelativePath(_rootPath, _sourcePath),
+            SourcePath = Path.GetRelativePath(rootPath, sourcePath),
             ReferencedTypes = m.ReferencedTypes.ToList()
         };
     }

@@ -1,0 +1,344 @@
+[
+  {
+    "helloWorld1.java@": [
+      {
+        "Name": "HelloWorld1",
+        "Type": "class",
+        "Privacy": "public",
+        "Content": "classHelloWorld1{publicvoidsayHello(){System.out.println(\u0022Hello\u0022);}}",
+        "Summary": "Purpose: print a greeting message to console Behavior: writes Hello to standard output",
+        "SourcePath": "helloWorld1.java",
+        "ReferencedTypes": [],
+        "Methods": [
+          {
+            "Name": "HelloWorld1.sayHello",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidsayHello(){System.out.println(\u0022Hello\u0022);}",
+            "Summary": "Purpose: This code provides a basic greeting functionality.  Behavior: Prints a message saying Hello.",
+            "SourcePath": "helloWorld1.java",
+            "ReferencedTypes": [],
+            "Hash": "85A5270C3895D9B06B78EE49A7E6F30EB99673C9C14F247DF558FFF021EBD62F"
+          }
+        ],
+        "Hash": "1E9836B222DED80B0D3A2F40F253B22337BEF8186267BF9FC1E05A63F5025580"
+      },
+      {
+        "Name": "Speaker1",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceSpeaker1{voidspeak();}",
+        "Summary": "Purpose: define an interface with a single method for speaking  Behavior: allows the implementation to provide spoken output through a single method",
+        "SourcePath": "helloWorld1.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "BCA798FF773C793991A24F2A7C67B7BCC14CC1C557BA54593E2DBACC6568110B"
+      },
+      {
+        "Name": "Greeter1",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceGreeter1{voidgreet();}",
+        "Summary": "Purpose: provide a way to greet someone  Behavior: initiates a greeting process",
+        "SourcePath": "helloWorld1.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "71B8423F400EC1BEF763972D816C7E861AAA8892458B673E0114C32A90F21F19"
+      },
+      {
+        "Name": "Welcomer1",
+        "Type": "interface",
+        "Privacy": "private",
+        "Content": "interfaceWelcomer1{voidwelcome();}",
+        "Summary": "Purpose: Define an interface for greeting functionality  Behavior: Provide a single method to initiate a welcoming process",
+        "SourcePath": "helloWorld1.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "718801788F8BE36FE88DD9808CE27394CDB663309E2152C669D9D105C4924EFB"
+      },
+      {
+        "Name": "FriendlyGreeter1",
+        "Type": "class",
+        "Privacy": "package-private",
+        "Content": "classFriendlyGreeter1implementsGreeter,Welcomer{publicvoidgreet(){System.out.println(\u0022Greetings\u0022);}publicvoidwelcome(){System.out.println(\u0022Welcome\u0022);}}",
+        "Summary": "Purpose: To provide greetings and welcome messages  Behavior: Prints Greetings for greeting operations and Welcome for welcome operations",
+        "SourcePath": "helloWorld1.java",
+        "ReferencedTypes": [
+          {
+            "Name": "Greeter",
+            "Kind": "implements"
+          },
+          {
+            "Name": "Welcomer",
+            "Kind": "implements"
+          }
+        ],
+        "Methods": [
+          {
+            "Name": "FriendlyGreeter1.greet",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidgreet(){System.out.println(\u0022Greetings\u0022);}",
+            "Summary": "Purpose: this function provides a basic greeting message  Behavior: prints a predefined message to the console",
+            "SourcePath": "helloWorld1.java",
+            "ReferencedTypes": [],
+            "Hash": "4A8E0319AB71C7B1884E6BB434CF6D28AFD15385A4D1AB2A473FBD8E98299348"
+          },
+          {
+            "Name": "FriendlyGreeter1.welcome",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidwelcome(){System.out.println(\u0022Welcome\u0022);}",
+            "Summary": "Purpose: Provide a welcoming message to users  Behavior: Print a greeting message to the console",
+            "SourcePath": "helloWorld1.java",
+            "ReferencedTypes": [],
+            "Hash": "63B374435B55FFAC2ED5BD6227A55259F31E2B24A3E6365167F98B87AF0ACF36"
+          }
+        ],
+        "Hash": "83ECD47821BA9C3AD360052209C8C08873A425976764BECFB089144D9917D0C2"
+      }
+    ]
+  },
+  {
+    "helloWorld.java@": [
+      {
+        "Name": "HelloWorld",
+        "Type": "class",
+        "Privacy": "public",
+        "Content": "classHelloWorld{publicvoidsayHello(){System.out.println(\u0022Hello\u0022);newSpeaker(2);newSpeaker2();}}",
+        "Summary": "Purpose: This class provides a basic hello-world functionality.  Behavior: It prints Hello to the console and initializes two speaker instances.",
+        "SourcePath": "helloWorld.java",
+        "ReferencedTypes": [],
+        "Methods": [
+          {
+            "Name": "HelloWorld.sayHello",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidsayHello(){System.out.println(\u0022Hello\u0022);newSpeaker(2);newSpeaker2();}",
+            "Summary": "Purpose: display a greeting message and interact with external components  Behavior: prints a Hello message, initializes or interacts with two external speaker objects",
+            "SourcePath": "helloWorld.java",
+            "ReferencedTypes": [
+              {
+                "Name": "Speaker",
+                "Source": "Speaker@helloWorld.java",
+                "Kind": "uses"
+              },
+              {
+                "Name": "Speaker2",
+                "Source": "Speaker2@helloWorld.java",
+                "Kind": "uses"
+              }
+            ],
+            "Hash": "F094F4841164B9F5361EC5EB911007FE4208A0999F769DB9A638454542BC5CAF"
+          }
+        ],
+        "Hash": "2727067279255BB5F7A3824715D5BB92F1D20F5C388A7E64736554BF61002584"
+      },
+      {
+        "Name": "Speaker",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceSpeaker{voidspeak();}",
+        "Summary": "Purpose: define an interface for object communication  Behavior: provide a mechanism for speaking or communicating",
+        "SourcePath": "helloWorld.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "E029FE04F8476E615F4761880553E38CA541D8E530D0694CDFDAAA03662D3C8D"
+      },
+      {
+        "Name": "Greeter",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceGreeter{voidgreet();}",
+        "Summary": "Purpose: defines a contract for greeting functionality  Behavior: provides an interface that allows for sending greetings",
+        "SourcePath": "helloWorld.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "FA765E447B2A0E6F081D719231B5FA18E9AB7D1D743FF53DFA19093489B86644"
+      },
+      {
+        "Name": "Welcomer",
+        "Type": "interface",
+        "Privacy": "private",
+        "Content": "interfaceWelcomer{voidwelcome();}",
+        "Summary": "Purpose: define a greeting interface  Behavior: provides a mechanism for performing a welcome action",
+        "SourcePath": "helloWorld.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "5F3AC63B0A92F28E9E0E10B0B2CFFF5E359F5084328F1232D69B27F3CC41EE70"
+      },
+      {
+        "Name": "FriendlyGreeter",
+        "Type": "class",
+        "Privacy": "package-private",
+        "Content": "classFriendlyGreeterimplementsGreeter,Welcomer{publicvoidgreet()throwsArithmeticException{System.out.println(\u0022Greetings1\u0022);newSpeaker();thrownewArithmeticException();}publicvoidwelcome(){System.out.println(\u0022Welcome1\u0022);}}",
+        "Summary": "Purpose: this class provides a friendly greeter that handles both greeting and welcoming logic.  Behavior: it prints Greetings and Welcome, throws an arithmetic exception, and delegates speaker responsibilities.",
+        "SourcePath": "helloWorld.java",
+        "ReferencedTypes": [
+          {
+            "Name": "Greeter",
+            "Kind": "implements"
+          },
+          {
+            "Name": "Welcomer",
+            "Kind": "implements"
+          }
+        ],
+        "Methods": [
+          {
+            "Name": "FriendlyGreeter.greet",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidgreet()throwsArithmeticException{System.out.println(\u0022Greetings1\u0022);newSpeaker();thrownewArithmeticException();}",
+            "Summary": "Purpose: perform initialization and error handling  Behavior: print a greeting message, initiate an action for a speaker, throw an arithmetic exception",
+            "SourcePath": "helloWorld.java",
+            "ReferencedTypes": [
+              {
+                "Name": "Speaker",
+                "Source": "Speaker@helloWorld.java",
+                "Kind": "uses"
+              },
+              {
+                "Name": "ArithmeticException",
+                "Source": "ArithmeticException@helloWorld.java",
+                "Kind": "uses"
+              }
+            ],
+            "Hash": "22D1B492D9094717CA6312EF292F1DF111898D04D97C500ED54EBA0FF3C82652"
+          },
+          {
+            "Name": "FriendlyGreeter.welcome",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidwelcome(){System.out.println(\u0022Welcome1\u0022);}",
+            "Summary": "Purpose: Display a greeting message to the user.  Behavior: Prints a welcome message.",
+            "SourcePath": "helloWorld.java",
+            "ReferencedTypes": [],
+            "Hash": "C041F0134E05687C369A807AEF9B2C9A561BA1054F229EF9A8A0286B81851125"
+          }
+        ],
+        "Hash": "58EFB1452CA27BB5E56FC4189E5ECB9B676EE86336B8912872CBC70FD9A6F2E9"
+      }
+    ]
+  },
+  {
+    "helloWorld2.java@Folder": [
+      {
+        "Name": "HelloWorld2",
+        "Type": "class",
+        "Privacy": "public",
+        "Content": "classHelloWorld2{publicvoidsayHello(){System.out.println(\u0022Hello\u0022);}}",
+        "Summary": "Purpose: prints greetings, Behavior: outputs Hello",
+        "SourcePath": "Folder/helloWorld2.java",
+        "ReferencedTypes": [],
+        "Methods": [
+          {
+            "Name": "HelloWorld2.sayHello",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidsayHello(){System.out.println(\u0022Hello\u0022);}",
+            "Summary": "Purpose: Outputting greetings to the console, Behavior: Print a hello message.",
+            "SourcePath": "Folder/helloWorld2.java",
+            "ReferencedTypes": [],
+            "Hash": "85A5270C3895D9B06B78EE49A7E6F30EB99673C9C14F247DF558FFF021EBD62F"
+          }
+        ],
+        "Hash": "3481CA10A59C5D251D87F5B80362ACDD1AF304CAC9CEA462577BB8E97143784F"
+      },
+      {
+        "Name": "Speaker2",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceSpeaker2{voidspeak();}",
+        "Summary": "Purpose: provide an interface for communication,  Behavior: allow objects to produce audio output.",
+        "SourcePath": "Folder/helloWorld2.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "6BB449B33810DCC766A025334D3E7DBCC7B4F1F76AC99C44504CDDE604D5013A"
+      },
+      {
+        "Name": "Greeter2",
+        "Type": "interface",
+        "Privacy": "package-private",
+        "Content": "interfaceGreeter2{voidgreet();}",
+        "Summary": "Purpose: defines an interface for greeting functionality, Behavior: provides a method to perform a basic greeting action.",
+        "SourcePath": "Folder/helloWorld2.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "3236F5B52383ECCBCBD84914AB62CBF5080E329E79527A0511D6F4C544D50C75"
+      },
+      {
+        "Name": "Welcomer2",
+        "Type": "interface",
+        "Privacy": "private",
+        "Content": "interfaceWelcomer2{voidwelcome();}",
+        "Summary": "Purpose: facilitates user interactions Behavior: initiates a welcome process",
+        "SourcePath": "Folder/helloWorld2.java",
+        "ReferencedTypes": [],
+        "Methods": [],
+        "Hash": "0D6D12B20356DCF8B86F213442B7E6D006E268CAB83E6094A34C72A7624E9288"
+      },
+      {
+        "Name": "FriendlyGreeter2",
+        "Type": "class",
+        "Privacy": "package-private",
+        "Content": "classFriendlyGreeter2implementsGreeter,Welcomer{publicvoidgreet(){System.out.println(\u0022Greetings\u0022);}publicvoidwelcome(){System.out.println(\u0022Welcome\u0022);}}",
+        "Summary": "Purpose: This class provides implementations of greeter and welcomer functionalities.  Behavior: The code initializes this object, which prints a greeting message, then another message welcoming someone.",
+        "SourcePath": "Folder/helloWorld2.java",
+        "ReferencedTypes": [
+          {
+            "Name": "Greeter",
+            "Source": "Greeter@helloWorld.java",
+            "Kind": "implements"
+          },
+          {
+            "Name": "Welcomer",
+            "Source": "Welcomer@helloWorld.java",
+            "Kind": "implements"
+          }
+        ],
+        "Methods": [
+          {
+            "Name": "FriendlyGreeter2.greet",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidgreet(){System.out.println(\u0022Greetings\u0022);}",
+            "Summary": "Purpose: Provides a way to output a greeting message, Behavior: Prints a predefined string.",
+            "SourcePath": "Folder/helloWorld2.java",
+            "ReferencedTypes": [],
+            "Hash": "4A8E0319AB71C7B1884E6BB434CF6D28AFD15385A4D1AB2A473FBD8E98299348"
+          },
+          {
+            "Name": "FriendlyGreeter2.welcome",
+            "Type": "method",
+            "Privacy": "public",
+            "ReturnType": "void",
+            "Parameters": "()",
+            "Content": "voidwelcome(){System.out.println(\u0022Welcome\u0022);}",
+            "Summary": "Purpose: Provides a greeting message to the user, Behavior: Prints a welcome message.",
+            "SourcePath": "Folder/helloWorld2.java",
+            "ReferencedTypes": [],
+            "Hash": "63B374435B55FFAC2ED5BD6227A55259F31E2B24A3E6365167F98B87AF0ACF36"
+          }
+        ],
+        "Hash": "3A8519681C41A91BB6F9D88B4C548081A1041022DDEE8273B9693F8E87F53191"
+      }
+    ]
+  }
+]
