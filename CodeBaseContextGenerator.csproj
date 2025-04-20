@@ -13,6 +13,11 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Antlr4 Include="Grammar\*.g4"/>
+        <Antlr4 Include="JavaAntlr4\_Grammar\JavaLexer.g4">
+          <Generator>MSBuild:Compile</Generator>
+        </Antlr4>
+        <Antlr4 Include="JavaAntlr4\_Grammar\JavaParser.g4">
+          <Generator>MSBuild:Compile</Generator>
+        </Antlr4>
     </ItemGroup>
 </Project>

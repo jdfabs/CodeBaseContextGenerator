@@ -18,12 +18,19 @@ class Program
     static async Task Main(string[] args)
     {
         // 1️⃣ Let the user pick a .java file or a folder (WASD file‑explorer)
-        _chosenPath = FileExplorer.Browse();
+        new Cli.ProjectExplorer.ProjectExplorer("../../../project_context.json").Browse();
+        
+        
+        
+        _chosenPath = new Cli.FileExplorer("java").BrowseAndGetPath();
+        
+        Console.WriteLine($"Chosen path: {_chosenPath}");
+
+        Console.ReadKey();
 
         // 2️⃣ Parse + emit JSON (blocking). Hit any key to re‑run.
         await InspectJavaPath(_chosenPath);
         
-        ProjectExplorer.BrowseStructure("../../../project_context.json");
         /*while (true)
         {
             
@@ -536,7 +543,7 @@ Java code:
 }
 
 
-/*                                        aass
+/*                                     
 var ollama = new OllamaClient();
 
 while (true)
