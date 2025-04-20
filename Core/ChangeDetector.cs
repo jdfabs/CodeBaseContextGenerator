@@ -79,31 +79,39 @@ public static class ChangeDetector
         return grouped;
     }
 
-    private static async Task<TypeRepresentation> SummarizeIfChangedAsync(
-        TypeRepresentation? old, TypeRepresentation current, OllamaClient ollama)
+    private static async Task<TypeRepresentation> SummarizeIfChangedAsync(TypeRepresentation? old, TypeRepresentation current, OllamaClient ollama)
     {
-        if (old?.Hash == current.Hash)
+        if (old?.Hash == current.Hash && MethodsUnchanged(old, current))
             return old;
 
         current.Summary = await SummaryGenerator.SummarizeAsync(current.Code, ollama);
-
-        if (current.Methods != null)
-        {
-            var summaries = current.Methods.Select(async method =>
-            {
-                Console.WriteLine($"Summarizing method {method.Name}...");
-                var oldMethod = old?.Methods?.FirstOrDefault(m => m.Name == method.Name && m.Type == "method");
-
-                if (oldMethod?.Hash == method.Hash)
-                    return oldMethod;
-
-                method.Summary = await SummaryGenerator.SummarizeAsync(method.Code, ollama);
-                return method;
-            });
-
-            current.Methods = (await Task.WhenAll(summaries)).ToList();
-        }
-
+        current.Methods = await SummarizeChangedMethodsAsync(old?.Methods, current.Methods, ollama);
         return current;
+    }
+
+    private static bool MethodsUnchanged(TypeRepresentation? old, TypeRepresentation current)
+    {
+        return old?.Methods != null && current.Methods != null &&
+               old.Methods.All(om =>
+                   current.Methods.Any(cm => cm.Name == om.Name && cm.Hash == om.Hash));
+    }
+
+    private static async Task<List<TypeRepresentation>> SummarizeChangedMethodsAsync(
+        List<TypeRepresentation>? oldMethods,
+        List<TypeRepresentation>? currentMethods,
+        OllamaClient ollama)
+    {
+        if (currentMethods == null) return [];
+
+        var tasks = currentMethods.Select(async method =>
+        {
+            var oldMethod = oldMethods?.FirstOrDefault(m => m.Name == method.Name && m.Type == "method");
+            if (oldMethod?.Hash == method.Hash) return oldMethod;
+            Console.WriteLine($"Summarizing method {method.Name}...");
+            method.Summary = await SummaryGenerator.SummarizeAsync(method.Code, ollama);
+            return method;
+        });
+
+        return (await Task.WhenAll(tasks)).ToList();
     }
 }
