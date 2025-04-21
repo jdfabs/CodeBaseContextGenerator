@@ -1,6 +1,6 @@
 using CodeBaseContextGenerator.LLM;
 
-namespace CodeBaseContextGenerator;
+namespace CodeBaseContextGenerator.Core.Shared;
 
 public static class SummaryGenerator
 {

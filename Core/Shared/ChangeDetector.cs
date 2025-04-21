@@ -1,7 +1,7 @@
-using CodeBaseContextGenerator.Json;
+using CodeBaseContextGenerator.Core.Utils.Json;
 using CodeBaseContextGenerator.LLM;
 
-namespace CodeBaseContextGenerator.Core;
+namespace CodeBaseContextGenerator.Core.Shared;
 
 public static class ChangeDetector
 {
