@@ -8,8 +8,7 @@ namespace CodeBaseContextGenerator.JavaAntlr4.Models;
 /// <param name="Name">Simple identifier of the referenced type.</param>
 /// <param name="Kind">Relationship kind – e.g. <c>extends</c>, <c>implements</c>, <c>uses</c>.</param>
 /// <param name="Source">Optional “file anchor” in the form <c>Name@RelativePath</c>.  Can be filled later by the resolver.</param>
-public sealed record TypeReference
-(
+public sealed record TypeReference(
     string Name,
     string Kind,
     string Source = ""
