@@ -8,6 +8,7 @@ public abstract class TypeRepresentationBase : ITypeRepresentation
 {
     // ICodeElement
     public required string Name { get; init; }
+    public required string FullQuanlifiedName { get; init; }
     public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
     public required string Privacy { get; init; }

@@ -1,4 +1,6 @@
+using System.Collections.Immutable;
 using CodeBaseContextGenerator.Core.Interfaces.Representations;
+using CodeBaseContextGenerator.Core.Interfaces.Representations.Properties;
 
 namespace CodeBaseContextGenerator.Core.Models.Representations;
 
@@ -6,7 +8,8 @@ public abstract class ConstructorRepresentationBase : IConstructorRepresentation
 {
     // ICodeElement
     public required string Name { get; init; }
-    public required IReadOnlyCollection<string> Modifiers { get; init; }
+    public required string FullQuanlifiedName { get; init;  }
+    public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
 
     // IHasCode
@@ -18,11 +21,15 @@ public abstract class ConstructorRepresentationBase : IConstructorRepresentation
 
     // ISourceAnchor
     public required string FilePath { get; init; }
+    public int? StartLine { get; init; }
+    public int? EndLine { get; init; }
+    public int? StartColumn { get; init; }
+    public int? EndColumn { get; init; }
     public int? Line { get; init; }
     public int? Column { get; init; }
 
     // IConstructorRepresentation specific
-    public required string Parameters { get; init; }
+    public required IReadOnlyCollection<Parameter> Parameters { get; init; }
     public IReadOnlyCollection<string> ExceptionsThrown { get; init; } = Array.Empty<string>();
 
     private static string ComputeHash(string code)

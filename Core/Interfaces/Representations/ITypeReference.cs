@@ -9,7 +9,6 @@ public interface ITypeReference : IHasName
     ReferenceKind Kind { get; }
     string Source { get; }
 
-    string FullyQualifiedName { get; }
     string? TargetPath { get; }
     string? TargetLanguage { get; }
 
