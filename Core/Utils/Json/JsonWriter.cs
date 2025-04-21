@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace CodeBaseContextGenerator.Json;
+namespace CodeBaseContextGenerator.Core.Utils.Json;
 
 public static class JsonWriter
 {

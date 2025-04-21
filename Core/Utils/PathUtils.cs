@@ -1,4 +1,4 @@
-namespace CodeBaseContextGenerator.Utils;
+namespace CodeBaseContextGenerator.Core.Utils;
 
 public static class PathUtils
 {

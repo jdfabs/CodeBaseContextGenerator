@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace CodeBaseContextGenerator.Json;
+namespace CodeBaseContextGenerator.Core.Utils.Json;
 
 public class JsonLoader
 {
