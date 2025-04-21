@@ -8,7 +8,7 @@ public abstract class ConstructorRepresentationBase : IConstructorRepresentation
 {
     // ICodeElement
     public required string Name { get; init; }
-    public required string FullQuanlifiedName { get; init;  }
+    public required string FullQualifiedName { get; init;  }
     public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
 

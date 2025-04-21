@@ -9,7 +9,7 @@ public static class SummaryGenerator
                                           Your task:
                                           Generate **structured summaries** using this exact format:
                                           Purpose:[one sentence explaining the high-level intent], Behavior:[one sentence describing what the code does in practice]
-                                          
+
                                           Guidelines:
                                           - Do NOT include class or method names
                                           - Do NOT mention parameter names or types
@@ -18,12 +18,12 @@ public static class SummaryGenerator
                                           - Use **lowercase**, **concise**, and **complete sentences**
                                           - Use abstract phrasing like “this class manages X” or “this method performs Y”
                                           - If the code is simple or unclear, still write a complete sentence
-                                          
+
                                           Example:
                                           (Purpose: handles user authentication logic, Behavior: verifies credentials and starts session on success)
-                                          
+
                                           ---
-                                          
+
                                           Here is the Java code to summarize:
                                           {0}
                                           """;
@@ -33,6 +33,16 @@ public static class SummaryGenerator
         var response = await ollama.SendPromptAsync(model, prompt);
         return Clean(response);
     }
+
+    public static string Summarize(string code)
+    {
+        var ollama = new OllamaClient();
+       
+        var prompt = string.Format(PromptTemplate, code);
+        var response =  ollama.SendPromptAsync("llama3", prompt).ToString();
+        return Clean(response);
+    }
+    
 
     private static string Clean(string raw)
     {

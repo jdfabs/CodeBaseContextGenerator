@@ -4,14 +4,13 @@ using CodeBaseContextGenerator.Core.Interfaces.Representations.Properties;
 
 namespace CodeBaseContextGenerator.Core.Models.Representations;
 
-public abstract class TypeRepresentationBase : ITypeRepresentation
+public class TypeRepresentationBase : ITypeRepresentation
 {
     // ICodeElement
     public required string Name { get; init; }
-    public required string FullQuanlifiedName { get; init; }
+    public required string FullQualifiedName { get; init; }
     public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
-    public required string Privacy { get; init; }
 
     // IHasCode
     public required string Code { get; init; }
@@ -26,13 +25,10 @@ public abstract class TypeRepresentationBase : ITypeRepresentation
     public int? EndLine { get; init; }
     public int? StartColumn { get; init; }
     public int? EndColumn { get; init; }
-    public int? Line { get; init; }
-    public int? Column { get; init; }
 
     // ITypeRepresentation specific
     public required string Type { get; init; } // "class", "interface", etc.
     public string Summary { get; set; } = string.Empty;
-    public string SourcePath => FilePath;
 
     public IReadOnlyCollection<ITypeReference> BaseTypes { get; init; } = Array.Empty<ITypeReference>();
     public IReadOnlyCollection<IFieldRepresentation> Fields { get; init; } = Array.Empty<IFieldRepresentation>();

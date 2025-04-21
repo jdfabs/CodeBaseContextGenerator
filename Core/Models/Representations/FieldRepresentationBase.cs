@@ -7,7 +7,7 @@ namespace CodeBaseContextGenerator.Core.Models.Representations;
 public abstract class FieldRepresentationBase : IFieldRepresentation
 {
     public required string Name { get; init; }
-    public required string FullQuanlifiedName { get; init; }
+    public required string FullQualifiedName { get; init; }
     public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
 

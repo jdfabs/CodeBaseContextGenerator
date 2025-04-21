@@ -2,7 +2,7 @@ using CodeBaseContextGenerator.Core.Interfaces.Representations;
 
 namespace CodeBaseContextGenerator.Core.Interfaces.Visitors;
 
-public interface ITypeUsageCollector<TNode> : IAstVisitor<TNode, IReadOnlyCollection<ITypeReference>>
+public interface ITypeUsageVisitor<TNode> : IAstVisitor<TNode, IReadOnlyCollection<ITypeReference>>
 {
 }
 

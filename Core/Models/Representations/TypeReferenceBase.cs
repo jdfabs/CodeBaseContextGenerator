@@ -6,7 +6,7 @@ namespace CodeBaseContextGenerator.Core.Models.Representations;
 public abstract class TypeReferenceBase : ITypeReference
 {
     public required string Name { get; init; }
-    public required string FullQuanlifiedName { get; init; }
+    public required string FullQualifiedName { get; init; }
     public required string Type { get; init; }
     public required ReferenceKind Kind { get; init; }
     public required string Source { get; init; }
