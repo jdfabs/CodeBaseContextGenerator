@@ -1,4 +1,6 @@
+using System.Collections.Immutable;
 using CodeBaseContextGenerator.Core.Interfaces.Representations;
+using CodeBaseContextGenerator.Core.Interfaces.Representations.Properties;
 
 namespace CodeBaseContextGenerator.Core.Models.Representations;
 
@@ -6,7 +8,7 @@ public abstract class TypeRepresentationBase : ITypeRepresentation
 {
     // ICodeElement
     public required string Name { get; init; }
-    public required IReadOnlyCollection<string> Modifiers { get; init; }
+    public required ImmutableHashSet<CodeModifier> Modifiers { get; init; }
     public string? Docs { get; init; }
     public required string Privacy { get; init; }
 
@@ -19,6 +21,10 @@ public abstract class TypeRepresentationBase : ITypeRepresentation
 
     // ISourceAnchor
     public required string FilePath { get; init; }
+    public int? StartLine { get; init; }
+    public int? EndLine { get; init; }
+    public int? StartColumn { get; init; }
+    public int? EndColumn { get; init; }
     public int? Line { get; init; }
     public int? Column { get; init; }
 
@@ -30,7 +36,10 @@ public abstract class TypeRepresentationBase : ITypeRepresentation
     public IReadOnlyCollection<ITypeReference> BaseTypes { get; init; } = Array.Empty<ITypeReference>();
     public IReadOnlyCollection<IFieldRepresentation> Fields { get; init; } = Array.Empty<IFieldRepresentation>();
     public IReadOnlyCollection<IMethodRepresentation> Methods { get; init; } = Array.Empty<IMethodRepresentation>();
-    public IReadOnlyCollection<IConstructorRepresentation> Constructors { get; init; } = Array.Empty<IConstructorRepresentation>();
+
+    public IReadOnlyCollection<IConstructorRepresentation> Constructors { get; init; } =
+        Array.Empty<IConstructorRepresentation>();
+
     public IReadOnlyCollection<ITypeRepresentation> NestedTypes { get; init; } = Array.Empty<ITypeRepresentation>();
 
     private static string ComputeHash(string code)

@@ -4,7 +4,7 @@ namespace CodeBaseContextGenerator.Core.Interfaces.Representations;
 
 public interface IMethodRepresentation : ICodeElement, IHasCode, IHasReferences, ISourceAnchor
 {
-    string ReturnType { get; }
-    string Parameters { get; }
+    ITypeReference ReturnType { get; }
+    IReadOnlyCollection<Parameter> Parameters { get; }
     IReadOnlyCollection<string> ExceptionsThrown { get; }
 }

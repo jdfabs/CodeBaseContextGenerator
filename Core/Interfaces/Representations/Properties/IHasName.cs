@@ -1,6 +1,6 @@
 namespace CodeBaseContextGenerator.Core.Interfaces.Representations.Properties;
 
-public interface IName
+public interface IHasName
 {
     string Name { get; } 
 }

@@ -1,7 +1,24 @@
+using System.Collections.Immutable;
+
 namespace CodeBaseContextGenerator.Core.Interfaces.Representations.Properties;
 
-public interface ICodeElement : IName
+public interface ICodeElement : IHasName
 {
-    IReadOnlyCollection<string> Modifiers { get; }
+    ImmutableHashSet<CodeModifier> Modifiers { get; }
     string? Docs { get; }
+}
+
+public enum CodeModifier
+{
+    Public,
+    Private,
+    Protected,
+    Internal,
+    Static,
+    Abstract,
+    Virtual,
+    Override,
+    Sealed,
+    ReadOnly,
+    Const
 }

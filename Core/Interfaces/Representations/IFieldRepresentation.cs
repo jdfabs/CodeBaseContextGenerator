@@ -4,5 +4,5 @@ namespace CodeBaseContextGenerator.Core.Interfaces.Representations;
 
 public interface IFieldRepresentation : ICodeElement
 {
-    string Type { get; }
+    ITypeReference Type { get; }
 }
