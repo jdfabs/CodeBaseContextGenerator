@@ -1,5 +1,5 @@
 using CodeBaseContextGenerator.Cli.Models;
-using CodeBaseContextGenerator.Json;
+using CodeBaseContextGenerator.Core.Utils.Json;
 
 namespace CodeBaseContextGenerator.Cli.Project;
 

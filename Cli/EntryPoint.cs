@@ -1,8 +1,9 @@
-using CodeBaseContextGenerator.Core;
+using CodeBaseContextGenerator.Core.Shared;
+using CodeBaseContextGenerator.Core.Utils;
+using CodeBaseContextGenerator.Core.Utils.Json;
 using CodeBaseContextGenerator.JavaAntlr4.Base;
-using CodeBaseContextGenerator.Json;
 using CodeBaseContextGenerator.LLM;
-using CodeBaseContextGenerator.Utils;
+using SummaryWriter = CodeBaseContextGenerator.Core.SummaryWriter;
 
 
 namespace CodeBaseContextGenerator.Cli;
