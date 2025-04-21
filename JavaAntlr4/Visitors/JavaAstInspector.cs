@@ -24,7 +24,7 @@ public sealed class JavaAstInspector
         var parser = new JavaParser(tokens) { BuildParseTree = true };
 
         // 1️⃣ Collect raw AST nodes (classes/interfaces/methods)
-        var cuVisitor = new CompilationUnitVisitor(_rootPath, sourcePath);
+        var cuVisitor = new CompilationUnitVisitor(_rootPath, sourcePath, tokens);
         cuVisitor.Visit(parser.compilationUnit());
 
         // 2️⃣ Convert to rich TypeRepresentation objects

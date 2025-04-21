@@ -1,3 +1,4 @@
+using Antlr4.Runtime;
 using CodeBaseContextGenerator.JavaAntlr4.Builders;
 
 namespace CodeBaseContextGenerator.JavaAntlr4.Visitors;
@@ -10,12 +11,15 @@ public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
 {
     private readonly string _rootPath;
     private readonly string _sourcePath;
+    private readonly CommonTokenStream _tokenStream;
     private readonly List<IAstTypeNode> _nodes = new();
+    
 
-    public CompilationUnitVisitor(string rootPath, string sourcePath)
+    public CompilationUnitVisitor(string rootPath, string sourcePath, CommonTokenStream tokenStream)
     {
         _rootPath   = rootPath;
         _sourcePath = sourcePath;
+        _tokenStream = tokenStream;
     }
 
     /// <summary>All types gathered from the compilation unit.</summary>
@@ -27,14 +31,29 @@ public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
     {
         if (ctx.classDeclaration() is { } cls)
         {
-            var visitor = new ClassVisitor(_rootPath, _sourcePath);
+            var visitor = new ClassVisitor(_rootPath, _sourcePath,_tokenStream);
             _nodes.Add(visitor.VisitClassDeclaration(cls));
         }
         else if (ctx.interfaceDeclaration() is { } iface)
         {
-            var visitor = new InterfaceVisitor(_rootPath, _sourcePath);
+            var visitor = new InterfaceVisitor(_tokenStream);
             _nodes.Add(visitor.VisitInterfaceDeclaration(iface));
         }
+        else if (ctx.enumDeclaration() is { } enums)
+        {
+            var visitor = new EnumVisitor(_rootPath, _sourcePath,_tokenStream);
+            _nodes.Add(visitor.VisitEnumDeclaration(enums));
+        }
+        else if (ctx.recordDeclaration() is {} record)
+        {
+            var visitor = new RecordVisitor(_rootPath, _sourcePath,_tokenStream);
+            _nodes.Add(visitor.VisitRecordDeclaration(record));
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported type declaration: {ctx.GetText()}");
+        }
+        
         return null; // prevent default deep‑walk – visitors handle children
     }
 }

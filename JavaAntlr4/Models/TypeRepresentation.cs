@@ -21,7 +21,14 @@ public class TypeRepresentation
 
     public string SourcePath     { get; set; }
     public List<TypeReference> ReferencedTypes { get; set; }
+    public bool IsAbstract            { get; set; }
+    public IReadOnlyCollection<string> Modifiers { get; set; }
+    public string? Javadoc            { get; set; }
+
+    public List<FieldRepresentation> Fields          { get; set; }
+    public List<ConstructorRepresentation> Constructors { get; set; }
     public List<TypeRepresentation> Methods     { get; set; }
+    public List<TypeRepresentation> NestedTypes { get; set; } // NEW
 
     // Hash is computed only over the raw code
     public string Hash => ComputeHash();
@@ -33,7 +40,24 @@ public class TypeRepresentation
         return Convert.ToHexString(sha.ComputeHash(bytes));
     }
 }
+public class FieldRepresentation
+{
+    public string Name     { get; set; }
+    public string Type     { get; set; }
+    public string Privacy  { get; set; }
+    public List<string> Modifiers { get; set; }
+    public string? Javadoc { get; set; }
+}
 
+public class ConstructorRepresentation
+{
+    public string Name       { get; set; }
+    public string Privacy    { get; set; }
+    public List<string> Modifiers { get; set; }
+    public string Parameters { get; set; }
+    public List<string> ExceptionsThrown { get; set; }
+    public string? Javadoc   { get; set; }
+}   
 
 public class TypeReference
 {

@@ -53,7 +53,7 @@ public class EntryPoint
                 Console.ResetColor();
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(60)); // ⏲ Configurable interval
+            await Task.Delay(TimeSpan.FromSeconds(10)); // ⏲ Configurable interval
         }
     }
 }

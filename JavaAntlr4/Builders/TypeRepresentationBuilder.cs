@@ -32,12 +32,31 @@ public sealed class TypeRepresentationBuilder(string rootPath, string sourcePath
             Name = node.Name,
             Type = node.Kind,
             Privacy = node.Privacy,
+            Modifiers      = node.Modifiers.ToList(),
+            IsAbstract     = node.IsAbstract,
+            Javadoc        = node.Javadoc,
             SourcePath = Path.GetRelativePath(rootPath, sourcePath),
             Code = node.Content,
             ReferencedTypes = node.InheritanceRefs.ToList(),
-            Methods = new List<TypeRepresentation>()
+            Fields         = node.Fields.Select(f => new FieldRepresentation {
+                Name       = f.Name,
+                Type       = f.Type,
+                Privacy    = f.Privacy,
+                Modifiers  = f.Modifiers.ToList(),
+                Javadoc    = f.Javadoc
+            }).ToList(),
+            Constructors   = node.Constructors.Select(c => new ConstructorRepresentation {
+                Name             = c.Name,
+                Privacy          = c.Privacy,
+                Modifiers        = c.Modifiers.ToList(),
+                Parameters       = c.Parameters,
+                ExceptionsThrown = string.IsNullOrEmpty(c.Throws)
+                    ? new List<string>()
+                    : c.Throws.Split(',').Select(x=>x.Trim()).ToList(),
+                Javadoc          = c.Javadoc
+            }).ToList(),
+            Methods        = new List<TypeRepresentation>()
         };
-
         // &#x2192; recurse for each method
         foreach (var m in node.Methods)
             rep.Methods!.Add(Build(m, node.Name));
@@ -50,8 +69,6 @@ public sealed class TypeRepresentationBuilder(string rootPath, string sourcePath
         return new TypeRepresentation
         {
             Name = $"{ownerName}.{m.Name}",
-            Type = "method",
-            Privacy = m.Privacy,
             ReturnType = m.ReturnType,
             Parameters = m.Parameters,
             Code = m.Content,
@@ -70,26 +87,42 @@ public interface IAstTypeNode
     string Kind { get; }
     string Privacy { get; }
     string Content { get; }
+    IReadOnlyCollection<string> Modifiers { get; }               // ← NEW
+    bool IsAbstract { get; }                                      // ← NEW
+    string? Javadoc { get; }                                      // ← NEW
+    IReadOnlyCollection<AstFieldNode> Fields { get; }             // ← NEW
+    IReadOnlyCollection<AstConstructorNode> Constructors { get; } // ← NEW
     IReadOnlyCollection<TypeReference> InheritanceRefs { get; }
     IReadOnlyCollection<AstMethodNode> Methods { get; }
 }
 
-/// <summary>‘class’ or ‘interface’ node produced by visitors.</summary>
-public sealed record AstTypeNode(
+public sealed record AstFieldNode(
     string Name,
-    string Kind,
+    string Type,
     string Privacy,
-    string Content,
-    IReadOnlyCollection<TypeReference> InheritanceRefs,
-    IReadOnlyCollection<AstMethodNode> Methods
-) : IAstTypeNode;
+    IReadOnlyCollection<string> Modifiers,
+    string? Javadoc,
+    string Content
+);
+
+public sealed record AstConstructorNode(
+    string Name,
+    string Privacy,
+    IReadOnlyCollection<string> Modifiers,
+    string Parameters,
+    string? Throws,      // e.g. "Exception"
+    string? Javadoc,
+    string Content
+);
 
 /// <summary>Light‑weight method node.</summary>
 public sealed record AstMethodNode(
     string Name,
-    string Privacy,
     string ReturnType,
     string Parameters,
+    string Throws,      // e.g. "Exception"
+    string Javadoc,
+    IReadOnlyCollection<string> Modifiers,
     string Content,
     IReadOnlyCollection<TypeReference> ReferencedTypes
 );

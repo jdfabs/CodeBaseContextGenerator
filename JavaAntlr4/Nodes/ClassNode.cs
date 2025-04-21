@@ -12,12 +12,14 @@ public sealed record ClassNode : IAstTypeNode
 {
     public string Name { get; init; } = string.Empty;
     public string Kind => "class";
-
-    public string Privacy { get; init; } = "package-private";
-    public IReadOnlyCollection<string> Modifiers { get; init; } = new List<string>();
-    public Interval BodyInterval { get; init; }
+    public string Privacy { get; init; } 
+    public IReadOnlyCollection<string> Modifiers { get; init; } 
+    public bool IsAbstract { get; init; }
+    public string? Javadoc { get; init; }
+    public IReadOnlyCollection<AstFieldNode> Fields { get; init; }
+    public IReadOnlyCollection<AstConstructorNode> Constructors { get; init; }
     public string Content { get; init; } = string.Empty;
+    public IReadOnlyCollection<TypeReference> InheritanceRefs { get; init; }
+    public IReadOnlyCollection<AstMethodNode> Methods { get; init; }
 
-    public IReadOnlyCollection<TypeReference> InheritanceRefs { get; init; } = new List<TypeReference>();
-    public IReadOnlyCollection<AstMethodNode> Methods { get; init; } = new List<AstMethodNode>();
 }

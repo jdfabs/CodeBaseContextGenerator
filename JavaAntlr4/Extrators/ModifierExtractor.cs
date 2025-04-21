@@ -16,4 +16,15 @@ internal static class ModifierExtractor
         (ctx.Parent?.Parent as JavaParser.ClassBodyDeclarationContext)?.modifier()
         .Select(m => m.GetText())
         .ToArray() ?? System.Array.Empty<string>();
+
+    public static IReadOnlyCollection<string> From(JavaParser.ClassBodyDeclarationContext? declCtx)
+    {
+        if (declCtx == null) 
+            return Array.Empty<string>();
+
+        // in Java8 grammar, modifiers appear as child contexts named `modifier()`
+        return declCtx.modifier()
+            .Select(m => m.GetText())
+            .ToList();
+    }
 }

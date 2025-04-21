@@ -6,46 +6,35 @@ public static class SummaryWriter
     {
         try
         {
-            var lines = new List<string>();
-
-            foreach (var fileGroup in data.SelectMany(dict => dict))
-            {
-                var filePath = fileGroup.Key;
-
-                foreach (var type in fileGroup.Value)
-                {
-                    string typeLine = Format(type, filePath);
-                    lines.Add(typeLine);
-
-                    if (type.Methods != null)
-                    {
-                        foreach (var method in type.Methods)
-                            lines.Add(Format(method, filePath));
-                    }
-                }
-            }
-
+            var lines = GenerateLines(data);
             File.WriteAllLines(outputPath, lines);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"✓ Summary written to: {outputPath}");
+            Console.WriteLine($"✓ Summary written to: {outputPath}", ConsoleColor.Green);
         }
         catch (Exception ex)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ Failed to write summary: {outputPath}");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"❌ Failed to write summary: {outputPath}\n{ex.Message}", ConsoleColor.Red);
         }
-        finally
-        {
-            Console.ResetColor();
-        }
+    }
+
+    private static List<string> GenerateLines(List<Dictionary<string, List<TypeRepresentation>>> data)
+    {
+        return data
+            .SelectMany(dict => dict)
+            .SelectMany(kvp => kvp.Value.SelectMany(type =>
+            {
+                var lines = new List<string> { Format(type, kvp.Key) };
+                if (type.Methods != null)
+                    lines.AddRange(type.Methods.Select(m => Format(m, kvp.Key)));
+                return lines;
+            }))
+            .ToList();
     }
 
     private static string Format(TypeRepresentation item, string fileKey)
     {
-        string header = $"{item.Privacy} {item.ReturnType ?? ""} {item.Name} {item.Parameters ?? "()"}".Trim();
-        string summary = item.Summary?.Trim() ?? "No summary";
-        string refs = item.ReferencedTypes != null && item.ReferencedTypes.Any()
+        var header = $"{item.Privacy} {item.ReturnType ?? ""} {item.Name} {item.Parameters ?? "()"}".Trim();
+        var summary = item.Summary?.Trim() ?? "No summary";
+        var refs = item.ReferencedTypes?.Any() == true
             ? string.Join(", ", item.ReferencedTypes.Select(r => r.Name))
             : "None";
 
