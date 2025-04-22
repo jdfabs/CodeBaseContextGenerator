@@ -1,4 +1,5 @@
 namespace CodeBaseContextGenerator.Core.Interfaces.Extractors.MetaData;
 
-public interface IDocExtractor<in TNode> : IExtractor<TNode,string?> {
+public interface IDocExtractor<in TNode> {
+    protected string ExtractDoc(TNode node);
 }
