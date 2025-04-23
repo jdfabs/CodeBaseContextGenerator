@@ -1,5 +1,7 @@
 using Antlr4.Runtime;
+using CodeBaseContextGenerator.Core.Models.Representations;
 using CodeBaseContextGenerator.JavaAntlr4.Builders;
+using CodeBaseContextGenerator.Languages.JavaAntlr4.Visitors__;
 
 namespace CodeBaseContextGenerator.JavaAntlr4.Visitors;
 
@@ -23,7 +25,10 @@ public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
     }
 
     /// <summary>All types gathered from the compilation unit.</summary>
-    public IReadOnlyCollection<IAstTypeNode> CollectedNodes => _nodes;
+    public IReadOnlyCollection<TypeRepresentationBase> CollectedNodes => newNodes;
+    
+    
+    public List<TypeRepresentationBase> newNodes = new();
 
     /*────────────────────────  Dispatch  ─────────────────────────*/
 
@@ -31,23 +36,31 @@ public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
     {
         if (ctx.classDeclaration() is { } cls)
         {
-            var visitor = new ClassVisitor(_rootPath, _sourcePath,_tokenStream);
-            _nodes.Add(visitor.VisitClassDeclaration(cls));
+            var assembler = new JavaRepresentationAssembler(_tokenStream);
+            newNodes.Add(assembler.CreateRepresentation(cls, _tokenStream));
+            //var visitor = new ClassVisitor(_rootPath, _sourcePath,_tokenStream);
+            //_nodes.Add(visitor.VisitClassDeclaration(cls));
         }
         else if (ctx.interfaceDeclaration() is { } iface)
         {
-            var visitor = new InterfaceVisitor(_tokenStream);
-            _nodes.Add(visitor.VisitInterfaceDeclaration(iface));
+            var assembler = new JavaRepresentationAssembler(_tokenStream);
+            newNodes.Add(assembler.CreateRepresentation(iface, _tokenStream));
+            //var visitor = new InterfaceVisitor(_tokenStream);
+            //_nodes.Add(visitor.VisitInterfaceDeclaration(iface));
         }
         else if (ctx.enumDeclaration() is { } enums)
         {
-            var visitor = new EnumVisitor(_rootPath, _sourcePath,_tokenStream);
-            _nodes.Add(visitor.VisitEnumDeclaration(enums));
+            var assembler = new JavaRepresentationAssembler(_tokenStream);
+            newNodes.Add(assembler.CreateRepresentation(enums, _tokenStream));
+            //var visitor = new EnumVisitor(_rootPath, _sourcePath,_tokenStream);
+            //_nodes.Add(visitor.VisitEnumDeclaration(enums));
         }
         else if (ctx.recordDeclaration() is {} record)
         {
-            var visitor = new RecordVisitor(_rootPath, _sourcePath,_tokenStream);
-            _nodes.Add(visitor.VisitRecordDeclaration(record));
+            var assembler = new JavaRepresentationAssembler(_tokenStream);
+            newNodes.Add(assembler.CreateRepresentation(record, _tokenStream));
+            //var visitor = new RecordVisitor(_rootPath, _sourcePath,_tokenStream);
+            //_nodes.Add(visitor.VisitRecordDeclaration(record));
         }
         else
         {

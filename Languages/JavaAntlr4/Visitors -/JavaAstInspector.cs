@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using CodeBaseContextGenerator.Core.Models.Representations;
 using CodeBaseContextGenerator.JavaAntlr4.Builders;
 
 namespace CodeBaseContextGenerator.JavaAntlr4.Visitors;
@@ -15,7 +16,7 @@ public sealed class JavaAstInspector
         => _rootPath = rootPath;
 
     /// <summary>Inspect a single <c>.java</c> source file.</summary>
-    public IReadOnlyCollection<TypeRepresentation> Inspect(string sourcePath)
+    public IReadOnlyCollection<TypeRepresentationBase> Inspect(string sourcePath)
     {
         var code   = File.ReadAllText(sourcePath);
         var input  = new AntlrInputStream(code);
