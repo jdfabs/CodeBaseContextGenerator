@@ -5,8 +5,6 @@ using CodeBaseContextGenerator.JavaAntlr4.Builders;
 namespace CodeBaseContextGenerator.JavaAntlr4.Visitors;
 
 /// <summary>
-/// Facade that glues the ANTLR parse phase (<see cref="CompilationUnitVisitor"/>)
-/// to the DTO phase (<see cref="TypeRepresentationBuilder"/>).
 /// </summary>
 public sealed class JavaAstInspector
 {

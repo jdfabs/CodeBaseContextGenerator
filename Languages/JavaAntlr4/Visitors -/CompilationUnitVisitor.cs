@@ -7,20 +7,14 @@ namespace CodeBaseContextGenerator.JavaAntlr4.Visitors;
 
 /// <summary>
 /// Top‑level visitor that walks a Java parse tree and collects a flat list
-/// of <see cref="IAstTypeNode"/> objects (classes or interfaces).
 /// </summary>
 public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
 {
-    private readonly string _rootPath;
-    private readonly string _sourcePath;
     private readonly CommonTokenStream _tokenStream;
-    private readonly List<IAstTypeNode> _nodes = new();
     
 
     public CompilationUnitVisitor(string rootPath, string sourcePath, CommonTokenStream tokenStream)
     {
-        _rootPath   = rootPath;
-        _sourcePath = sourcePath;
         _tokenStream = tokenStream;
     }
 
@@ -38,29 +32,21 @@ public sealed class CompilationUnitVisitor : JavaParserBaseVisitor<object?>
         {
             var assembler = new JavaRepresentationAssembler(_tokenStream);
             newNodes.Add(assembler.CreateRepresentation(cls, _tokenStream));
-            //var visitor = new ClassVisitor(_rootPath, _sourcePath,_tokenStream);
-            //_nodes.Add(visitor.VisitClassDeclaration(cls));
         }
         else if (ctx.interfaceDeclaration() is { } iface)
         {
             var assembler = new JavaRepresentationAssembler(_tokenStream);
             newNodes.Add(assembler.CreateRepresentation(iface, _tokenStream));
-            //var visitor = new InterfaceVisitor(_tokenStream);
-            //_nodes.Add(visitor.VisitInterfaceDeclaration(iface));
         }
         else if (ctx.enumDeclaration() is { } enums)
         {
             var assembler = new JavaRepresentationAssembler(_tokenStream);
             newNodes.Add(assembler.CreateRepresentation(enums, _tokenStream));
-            //var visitor = new EnumVisitor(_rootPath, _sourcePath,_tokenStream);
-            //_nodes.Add(visitor.VisitEnumDeclaration(enums));
         }
         else if (ctx.recordDeclaration() is {} record)
         {
             var assembler = new JavaRepresentationAssembler(_tokenStream);
             newNodes.Add(assembler.CreateRepresentation(record, _tokenStream));
-            //var visitor = new RecordVisitor(_rootPath, _sourcePath,_tokenStream);
-            //_nodes.Add(visitor.VisitRecordDeclaration(record));
         }
         else
         {
