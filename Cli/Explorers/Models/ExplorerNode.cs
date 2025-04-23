@@ -1,3 +1,5 @@
+using CodeBaseContextGenerator.Core.Models.Representations;
+
 namespace CodeBaseContextGenerator.Cli.Models;
 
 public class ExplorerNode : BaseNode
@@ -6,7 +8,7 @@ public class ExplorerNode : BaseNode
     public string Type { get; set; } = "No Type"; // "Class", "Interface", "Enum", "Struct", "Record", "File"
     public List<ExplorerNode> Children { get; set; } = [];
     public bool Expanded { get; set; }
-    public TypeRepresentation Data { get; set; }
+    public TypeRepresentationBase Data { get; set; }
 
     public int Indent { get; set; } = 0;
     public override string Icon => Type switch
