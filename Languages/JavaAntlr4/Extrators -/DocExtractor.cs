@@ -2,7 +2,7 @@ using Antlr4.Runtime;
 
 namespace CodeBaseContextGenerator.JavaAntlr4.Extrators;
 
-public static class JavadocExtractor
+public static class DocExtractor
 {
     /// <summary>
     /// Scans backward from the start of ctx for a hidden‑channel token

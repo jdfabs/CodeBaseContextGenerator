@@ -48,14 +48,19 @@ public class JavaReferenceTypeExtractor : ITypeUsageExtractor<ParserRuleContext>
             if (string.IsNullOrWhiteSpace(typeName)) return;
             if (!_seen.Add(typeName)) return;
 
-            _results.Add(new TypeReferenceBase
+            /*_results.Add(new TypeReferenceBase
             {
                 Name = typeName,
                 Kind = kind,
                 Source = "", // can be resolved later via FQN resolver
                 FullQualifiedName = new JavaFullQualifiedNameExtractor().Extract(node),
                 Type = new JavaFullQualifiedNameExtractor().Extract(node)
-            });
+            });*/
         }
+    }
+
+    public IReadOnlyCollection<ITypeReference> ExtractReferences(ParserRuleContext node)
+    {
+        throw new NotImplementedException();
     }
 }

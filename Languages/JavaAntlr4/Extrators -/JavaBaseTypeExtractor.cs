@@ -63,7 +63,7 @@ public class JavaBaseTypeExtractor : IBaseTypeExtractor<ParserRuleContext>
 
     private static ITypeReference Create(string name, ReferenceKind kind, ParserRuleContext context)
     {
-        var fqn = new JavaFullQualifiedNameExtractor().Extract(context);
+        string fqn = "";//new JavaFullQualifiedNameExtractor().Extract(context);
         return new TypeReferenceBase
         {
             Name = name,
@@ -72,5 +72,10 @@ public class JavaBaseTypeExtractor : IBaseTypeExtractor<ParserRuleContext>
             FullQualifiedName = null, // optional target resolution
             Type = null // optional resolved target
         };
+    }
+
+    public IReadOnlyCollection<ITypeReference> ExtractInheritedTypes(ParserRuleContext node)
+    {
+        throw new NotImplementedException();
     }
 }

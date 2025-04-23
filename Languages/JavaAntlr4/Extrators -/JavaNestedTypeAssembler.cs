@@ -18,7 +18,7 @@ public class JavaNestedTypeAssembler : INestedTypeAssembler<ParserRuleContext>
         var results = new List<ITypeRepresentation>();
 
         // Only process nodes with class bodies
-        body;
+        ParserRuleContext body;
         switch (node)
         {
             case JavaParser.ClassDeclarationContext cls:
@@ -53,7 +53,7 @@ public class JavaNestedTypeAssembler : INestedTypeAssembler<ParserRuleContext>
         foreach (var member in members ?? Array.Empty<ParserRuleContext>())
         {
             // Handle only type declarations
-            typeDecl;
+            ParserRuleContext typeDecl;
             switch (member)
             {
                 case JavaParser.ClassBodyDeclarationContext decl:
